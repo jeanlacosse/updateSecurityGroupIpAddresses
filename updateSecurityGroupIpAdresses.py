@@ -2,11 +2,8 @@ import os
 import boto3
 import requests
 
-# Get current public IP
-def get_current_public_ip():
-    response = requests.get('https://api.ipify.org')
-    print('current IP is:', response.text)
-    return response.text
+# to invoke this from API gateway, from local machine in order to get that machines actual IP address, use the local script in powershell to invoke 
+# this any time I need to update my ip addresses in my security groups.
 
 # Update security group rules
 def update_security_group(sg_id, old_ip, new_ip, port):
@@ -37,9 +34,9 @@ def lambda_handler(event, context):
     print('SECURITY_GROUP_IDS are:', SECURITY_GROUP_IDS)
     PORTS = os.environ['PORTS'].split(',')
     print('PORTS are:', PORTS)
-    current_ip = get_current_public_ip()
+    current_ip = event['ip_address']
 
-    print('get current ip success')
+    print('Current ip address is:', current_ip)
 
     ec2 = boto3.client('ec2')
     print('ec2 client created with boto3')
